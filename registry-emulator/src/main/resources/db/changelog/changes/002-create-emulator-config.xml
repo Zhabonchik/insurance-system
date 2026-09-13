@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <changeSet id="002-create-emulator-config" author="Zhabonchik">
+    <createTable tableName="emulator_config">
+      <column name="id" type="INTEGER">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="mode" type="VARCHAR(50)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <sql>
+      <![CDATA[
+        ALTER TABLE emulator_config
+        ADD CONSTRAINT chk_emulator_config_mode
+        CHECK (mode IN ('SUCCESS', 'BUSINESS_ERROR', 'TECHNICAL_ERROR', 'UNAVAILABLE'));
+      ]]>
+    </sql>
+
+    <sql>
+      <![CDATA[
+        ALTER TABLE emulator_config
+        ADD CONSTRAINT chk_emulator_config_single_row
+        CHECK (id = 1);
+      ]]>
+    </sql>
+
+    <rollback>
+      <dropTable tableName="emulator_config"/>
+    </rollback>
+  </changeSet>
+</databaseChangeLog>

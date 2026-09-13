@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <changeSet id="001-create-registry-record" author="Zhabonchik">
+    <createTable tableName="registry_record">
+      <column name="id" type="UUID">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="external_contract_id" type="UUID">
+        <constraints nullable="false"/>
+      </column>
+      <column name="contract_number" type="VARCHAR(100)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="policyholder_name" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="policyholder_passport" type="VARCHAR(50)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="insured_amount" type="DECIMAL(15,2)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="term_months" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+      <column name="registered_at" type="TIMESTAMP WITH TIME ZONE">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <addUniqueConstraint tableName="registry_record"
+      columnNames="external_contract_id"
+      constraintName="uq_registry_record_external_contract_id"/>
+
+    <sql>
+      <![CDATA[
+        ALTER TABLE registry_record
+        ADD CONSTRAINT chk_registry_record_insured_amount_positive
+        CHECK (insured_amount > 0);
+      ]]>
+    </sql>
+
+    <sql>
+      <![CDATA[
+        ALTER TABLE registry_record
+        ADD CONSTRAINT chk_registry_record_term_months_positive
+        CHECK (term_months > 0);
+      ]]>
+    </sql>
+
+    <rollback>
+      <dropTable tableName="registry_record"/>
+    </rollback>
+  </changeSet>
+</databaseChangeLog>
