@@ -1,0 +1,29 @@
+# Build artifacts
+**/target/
+**/*.jar
+
+# Version control & IDE
+.git
+.gitignore
+.idea
+*.iml
+*.iws
+*.ipr
+.vscode
+
+# Local tooling, docs & config
+.opencode
+documents
+implementation
+AGENTS.md
+HELP.md
+
+# OS
+.DS_Store
+
+# Local infrastructure (not needed inside the build)
+keycloak
+postgres-init
+docker-compose.yaml
+compose.yaml
+.dockerignore
