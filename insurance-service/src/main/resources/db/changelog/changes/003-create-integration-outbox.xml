@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <changeSet id="003-create-integration-outbox" author="Zhabonchik">
+    <createTable tableName="integration_outbox">
+      <column name="id" type="UUID">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="contract_id" type="UUID">
+        <constraints nullable="false"/>
+      </column>
+      <column name="status" type="VARCHAR(50)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="retry_count" type="INTEGER" defaultValueNumeric="0">
+        <constraints nullable="false"/>
+      </column>
+      <column name="next_retry_at" type="TIMESTAMP WITH TIME ZONE">
+        <constraints nullable="false"/>
+      </column>
+      <column name="last_error" type="VARCHAR(500)">
+        <constraints nullable="true"/>
+      </column>
+      <column name="last_attempt_at" type="TIMESTAMP WITH TIME ZONE">
+        <constraints nullable="true"/>
+      </column>
+    </createTable>
+
+    <addUniqueConstraint tableName="integration_outbox"
+      columnNames="contract_id"
+      constraintName="uq_integration_outbox_contract_id"/>
+
+    <addForeignKeyConstraint baseTableName="integration_outbox"
+      baseColumnNames="contract_id"
+      referencedTableName="contract"
+      referencedColumnNames="id"
+      constraintName="fk_integration_outbox_contract"/>
+
+    <sql>
+      <![CDATA[
+        ALTER TABLE integration_outbox
+        ADD CONSTRAINT chk_integration_outbox_status
+        CHECK (status IN ('PENDING', 'SUCCESS', 'FAILED_BUSINESS', 'DEAD_LETTER'));
+      ]]>
+    </sql>
+
+    <createIndex tableName="integration_outbox" indexName="idx_outbox_status_next_retry">
+      <column name="status"/>
+      <column name="next_retry_at"/>
+    </createIndex>
+
+    <rollback>
+      <dropTable tableName="integration_outbox"/>
+    </rollback>
+  </changeSet>
+</databaseChangeLog>

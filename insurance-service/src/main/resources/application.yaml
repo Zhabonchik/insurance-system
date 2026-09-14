@@ -1,3 +1,49 @@
 spring:
   application:
     name: insurance-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/insurance_db
+    username: admin
+    password: admin_password
+
+  jpa:
+    hibernate:
+      # Liquibase owns the schema; Hibernate only validates entity/table alignment.
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.xml
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # Local IDE runs hit Keycloak on the host port. Docker overrides this
+          # via SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI (see compose).
+          issuer-uri: http://localhost:8082/realms/insurance-realm
+
+server:
+  port: ${SERVER_PORT:8080}
+
+registry:
+  emulator:
+    base-url: ${REGISTRY_EMULATOR_URL:http://localhost:8081}
+    connect-timeout: 2s
+    read-timeout: 5s
+
+outbox:
+  scheduler:
+    enabled: true
+    fixed-delay: 5s
+    batch-size: 20
+  retry:
+    max-retries: 5
+    base-delay: 2s
+    max-delay: 5m

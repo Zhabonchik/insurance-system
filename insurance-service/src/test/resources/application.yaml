@@ -1,0 +1,26 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.xml
+
+registry:
+  emulator:
+    base-url: http://localhost:18081
+    connect-timeout: 200ms
+    read-timeout: 200ms
+
+outbox:
+  scheduler:
+    enabled: false
+  retry:
+    max-retries: 5
+    base-delay: 2s
+    max-delay: 5m
