@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class RegistryEmulatorApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(RegistryEmulatorApplication.class, args);
-    }
-
+  static void main(String[] args) {
+    SpringApplication.run(RegistryEmulatorApplication.class, args);
+  }
 }
