@@ -20,6 +20,9 @@ registry:
 outbox:
   scheduler:
     enabled: false
+    batch-size: 20
+    concurrency: 5
+    lease-timeout: 30s
   retry:
     max-retries: 5
     base-delay: 2s

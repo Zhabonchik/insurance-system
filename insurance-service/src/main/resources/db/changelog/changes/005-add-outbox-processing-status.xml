@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <changeSet id="005-add-outbox-processing-status" author="Zhabonchik">
+    <addColumn tableName="integration_outbox">
+      <column name="claimed_at" type="TIMESTAMP WITH TIME ZONE">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+
+    <sql>
+      <![CDATA[
+        ALTER TABLE integration_outbox
+        DROP CONSTRAINT chk_integration_outbox_status;
+
+        ALTER TABLE integration_outbox
+        ADD CONSTRAINT chk_integration_outbox_status
+        CHECK (status IN ('PENDING', 'PROCESSING', 'SUCCESS', 'FAILED_BUSINESS', 'DEAD_LETTER'));
+      ]]>
+    </sql>
+
+    <createIndex tableName="integration_outbox" indexName="idx_outbox_status_claimed_at">
+      <column name="status"/>
+      <column name="claimed_at"/>
+    </createIndex>
+
+    <rollback>
+      <dropIndex tableName="integration_outbox" indexName="idx_outbox_status_claimed_at"/>
+      <sql>
+        <![CDATA[
+          ALTER TABLE integration_outbox
+          DROP CONSTRAINT chk_integration_outbox_status;
+
+          ALTER TABLE integration_outbox
+          ADD CONSTRAINT chk_integration_outbox_status
+          CHECK (status IN ('PENDING', 'SUCCESS', 'FAILED_BUSINESS', 'DEAD_LETTER'));
+        ]]>
+      </sql>
+      <dropColumn tableName="integration_outbox" columnName="claimed_at"/>
+    </rollback>
+  </changeSet>
+</databaseChangeLog>

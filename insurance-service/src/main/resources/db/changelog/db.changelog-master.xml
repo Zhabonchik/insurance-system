@@ -9,4 +9,5 @@
   <include file="db/changelog/changes/002-create-contract.xml"/>
   <include file="db/changelog/changes/003-create-integration-outbox.xml"/>
   <include file="db/changelog/changes/004-create-contract-number-sequence.xml"/>
+  <include file="db/changelog/changes/005-add-outbox-processing-status.xml"/>
 </databaseChangeLog>

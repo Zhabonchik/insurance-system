@@ -25,8 +25,10 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          # Local IDE runs hit Keycloak on the host port. Docker overrides this
-          # via SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI (see compose).
+          # Client-facing issuer: tokens minted at http://localhost:8082 carry this
+          # exact iss claim, so validation must target it. Docker keeps this value but
+          # overrides the JWKS location via ...JWK_SET_URI (container cannot reach
+          # localhost:8082, see compose).
           issuer-uri: http://localhost:8082/realms/insurance-realm
 
 server:
@@ -35,6 +37,7 @@ server:
 registry:
   emulator:
     base-url: ${REGISTRY_EMULATOR_URL:http://localhost:8081}
+    register-path: ${REGISTRY_REGISTER_PATH:/api/registry/contracts}
     connect-timeout: 2s
     read-timeout: 5s
 
@@ -43,6 +46,10 @@ outbox:
     enabled: true
     fixed-delay: 5s
     batch-size: 20
+    # Max registry calls in flight; keep below the Hikari pool size.
+    concurrency: 5
+    # How long a PROCESSING row may stay claimed before it is reclaimed.
+    lease-timeout: 30s
   retry:
     max-retries: 5
     base-delay: 2s

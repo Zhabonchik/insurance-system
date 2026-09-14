@@ -61,8 +61,11 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/insurance_db
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=admin_password
-      # Внутренний URL Keycloak для валидации JWT токенов
-      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://keycloak:8080/realms/insurance-realm
+      # Публичный issuer, который реально стоит в токене (клиент ходит через localhost:8082),
+      # поэтому проверка iss должна совпадать именно с ним.
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://localhost:8082/realms/insurance-realm
+      # Внутренний URL для получения JWKS: localhost внутри контейнера недоступен.
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=http://keycloak:8080/realms/insurance-realm/protocol/openid-connect/certs
       # URL эмулятора для REST-клиента
       - REGISTRY_EMULATOR_URL=http://registry-emulator:8080
     depends_on:
