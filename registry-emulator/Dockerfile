@@ -1,19 +1,19 @@
-# Этап 1: Сборка
+# Build
 FROM maven:3.9.6-eclipse-temurin-21-alpine AS builder
 WORKDIR /app
 
-# Копируем родительский pom.xml и pom.xml всех модулей
+# copy parent pom.xml
 COPY pom.xml .
 COPY insurance-service/pom.xml insurance-service/
 COPY registry-emulator/pom.xml registry-emulator/
 
-# Копируем исходный код целевого сервиса
+# Copy the source code of the target service
 COPY registry-emulator/src registry-emulator/src
 
-# Собираем только модуль registry-emulator
+# Building registry-emulator module
 RUN mvn clean package -pl registry-emulator -am -DskipTests
 
-# Этап 2: Запуск
+# Run
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 

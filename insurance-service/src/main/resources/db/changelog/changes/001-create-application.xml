@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <changeSet id="001-create-application" author="Zhabonchik">
+    <createTable tableName="application">
+      <column name="id" type="UUID">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="applicant_id" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="applicant_name" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="passport_data" type="VARCHAR(50)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="insured_amount" type="DECIMAL(15,2)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="term_months" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+      <column name="status" type="VARCHAR(50)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_at" type="TIMESTAMP WITH TIME ZONE" defaultValueComputed="now()">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <sql>
+      <![CDATA[
+        ALTER TABLE application
+        ADD CONSTRAINT chk_application_insured_amount_positive
+        CHECK (insured_amount > 0);
+      ]]>
+    </sql>
+
+    <sql>
+      <![CDATA[
+        ALTER TABLE application
+        ADD CONSTRAINT chk_application_term_months_positive
+        CHECK (term_months > 0);
+      ]]>
+    </sql>
+
+    <sql>
+      <![CDATA[
+        ALTER TABLE application
+        ADD CONSTRAINT chk_application_status
+        CHECK (status IN ('SUBMITTED', 'APPROVED', 'REJECTED'));
+      ]]>
+    </sql>
+
+    <createIndex tableName="application" indexName="idx_application_applicant_id">
+      <column name="applicant_id"/>
+    </createIndex>
+
+    <createIndex tableName="application" indexName="idx_application_status_created">
+      <column name="status"/>
+      <column name="created_at"/>
+    </createIndex>
+
+    <rollback>
+      <dropTable tableName="application"/>
+    </rollback>
+  </changeSet>
+</databaseChangeLog>
