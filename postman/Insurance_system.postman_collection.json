@@ -1,0 +1,345 @@
+{
+  "info": {
+    "_postman_id": "9fffce96-6d6a-4d02-80b0-2da6c57bf6c5",
+    "name": "Insurance system",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "43816035",
+    "_collection_link": "https://go.postman.co/collection/43816035-9fffce96-6d6a-4d02-80b0-2da6c57bf6c5?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "registry-emulator",
+      "item": [
+        {
+          "name": "Get current mode",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{registry-emulator-url}}/emulator/mode",
+              "host": [
+                "{{registry-emulator-url}}"
+              ],
+              "path": [
+                "emulator",
+                "mode"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Switch mode",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{registry-emulator-url}}/emulator/mode?type=SUCCESS",
+              "host": [
+                "{{registry-emulator-url}}"
+              ],
+              "path": [
+                "emulator",
+                "mode"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "SUCCESS"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register contract",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"externalContractId\": \"c4fd176e-23cd-431a-9a0c-6a2597a66098\",\n    \"contractNumber\": \"LIFE-2026-000123\",\n    \"policyholderName\": \"Ivan Ivanov\",\n    \"policyholderPassport\": \"1234 567890\",\n    \"insuredAmount\": \"500000.00\",\n    \"termMonths\": 60\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{registry-emulator-url}}/registry/contracts",
+              "host": [
+                "{{registry-emulator-url}}"
+              ],
+              "path": [
+                "registry",
+                "contracts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List all contracts",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{registry-emulator-url}}/registry/contracts",
+              "host": [
+                "{{registry-emulator-url}}"
+              ],
+              "path": [
+                "registry",
+                "contracts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get contract by id",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{registry-emulator-url}}/registry/contracts/{{external-contract-id}}",
+              "host": [
+                "{{registry-emulator-url}}"
+              ],
+              "path": [
+                "registry",
+                "contracts",
+                "{{external-contract-id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "insurance-service",
+      "item": [
+        {
+          "name": "Application",
+          "item": [
+            {
+              "name": "Create application",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"applicantName\": \"Petr Petrov\",\n    \"passportData\": \"2143 567890\",\n    \"insuredAmount\": \"100000.00\",\n    \"termMonths\": \"30\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{insurance-service-url}}/applications",
+                  "host": [
+                    "{{insurance-service-url}}"
+                  ],
+                  "path": [
+                    "applications"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get aplications",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{insurance-service-url}}/applications",
+                  "host": [
+                    "{{insurance-service-url}}"
+                  ],
+                  "path": [
+                    "applications"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get aplication by id",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{insurance-service-url}}/applications/{{application-id}}",
+                  "host": [
+                    "{{insurance-service-url}}"
+                  ],
+                  "path": [
+                    "applications",
+                    "{{application-id}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Approve application",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{insurance-service-url}}/applications/{{application-id}}/approve",
+                  "host": [
+                    "{{insurance-service-url}}"
+                  ],
+                  "path": [
+                    "applications",
+                    "{{application-id}}",
+                    "approve"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Reject application",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{insurance-service-url}}/applications/{{application-id}}/reject",
+                  "host": [
+                    "{{insurance-service-url}}"
+                  ],
+                  "path": [
+                    "applications",
+                    "{{application-id}}",
+                    "reject"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Issue a contract",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{insurance-service-url}}/applications/{{application-id}}/contract",
+                  "host": [
+                    "{{insurance-service-url}}"
+                  ],
+                  "path": [
+                    "applications",
+                    "{{application-id}}",
+                    "contract"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Contract",
+          "item": [
+            {
+              "name": "Get all contracts",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{insurance-service-url}}/contracts",
+                  "host": [
+                    "{{insurance-service-url}}"
+                  ],
+                  "path": [
+                    "contracts"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get contract by id",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{insurance-service-url}}/contracts/{{contract-it}}",
+                  "host": [
+                    "{{insurance-service-url}}"
+                  ],
+                  "path": [
+                    "contracts",
+                    "{{contract-it}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "clientId",
+        "value": "postman",
+        "type": "string"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "http://localhost:8082/realms/insurance-realm/protocol/openid-connect/token",
+        "type": "string"
+      },
+      {
+        "key": "authUrl",
+        "value": "http://localhost:8082/realms/insurance-realm/protocol/openid-connect/auth",
+        "type": "string"
+      },
+      {
+        "key": "tokenName",
+        "value": "kc-token",
+        "type": "string"
+      },
+      {
+        "key": "addTokenTo",
+        "value": "header",
+        "type": "string"
+      },
+      {
+        "key": "redirect_uri",
+        "value": "http://localhost:8085/oauth2/callback",
+        "type": "string"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code_with_pkce",
+        "type": "string"
+      }
+    ]
+  }
+}
