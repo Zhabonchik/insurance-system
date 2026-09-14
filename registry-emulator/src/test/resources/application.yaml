@@ -1,0 +1,14 @@
+spring:
+  jpa:
+    hibernate:
+      # Liquibase owns the schema; Hibernate only validates entity/table alignment.
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.xml
