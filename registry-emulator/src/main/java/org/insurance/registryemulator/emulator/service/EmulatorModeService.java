@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class EmulatorConfigService {
+public class EmulatorModeService {
 
   private final EmulatorConfigRepository repository;
 
